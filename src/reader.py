@@ -42,17 +42,17 @@ class Reader(object):
         return res
 
     def read(self, string):
-        content = self._md.reset().convert(string.strip(' \n'))
+        body = self._md.reset().convert(string.strip(' \n'))
         meta = self._parse_metadata(self._md.Meta)
-        return content, meta
+        return body, meta
 
     def read_from_file(self, path):
         with open(path, 'r') as f:
-            document = f.read().decode('utf-8') 
-        return self.read(document)
+            content = f.read().decode('utf-8') 
+        return self.read(content)
 
 if __name__ == '__main__':
     r = Reader()
-    content, meta = r.read_from_file('../example.md')
-    print(content)
+    body, meta = r.read_from_file('../example.md')
+    print(body)
     print(meta)
