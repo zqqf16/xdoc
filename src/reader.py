@@ -15,17 +15,17 @@ def get_date(string):
         date = datetime.now()
     return date
 
-# Metadata handlers
-META_HANDLERS = {
-    'tag':      lambda x: x if x else [],
-    'title':    lambda x: x[0] if x else '',
-    'auther':   lambda x: x[0] if x else '',
-    'created':  lambda x: get_date(x[0]) if x else datetime.now(),
-    'modified': lambda x: get_date(x[0]) if x else datetime.now(),
-}
 
 class Reader(object):
     '''Read Markdown, return HTML'''
+    # Metadata handlers
+    META_HANDLERS = {
+        'tag':      lambda x: x if x else [],
+        'title':    lambda x: x[0] if x else '',
+        'auther':   lambda x: x[0] if x else '',
+        'created':  lambda x: get_date(x[0]) if x else datetime.now(),
+        'modified': lambda x: get_date(x[0]) if x else datetime.now(),
+    }
 
     def __init__(self):
         self._md = markdown.Markdown(extensions=['fenced_code', 'codehilite', 'meta'], 
@@ -35,7 +35,7 @@ class Reader(object):
  
     def _parse_metadata(self, meta):
         res = {}
-        for name, handler in META_HANDLERS.items():
+        for name, handler in self.META_HANDLERS.items():
             value = handler(meta.get(name, None))
             res[name] = value
 
