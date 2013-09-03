@@ -11,10 +11,13 @@ import git
 from handlers import ViewHandler
 
 define("port", default=8888, help="run on the given port", type=int)
+define("path", default='./', help="run on the given path", type=str)
 
 class XdocApp(tornado.web.Application):
     def __init__(self, root_path):
         self.repo = git.Repo(root_path)
+        self.root_path = root_path
+
         handlers = [
             (r'/view/(.*)', ViewHandler),
         ]
