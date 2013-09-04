@@ -4,31 +4,47 @@
 import os
 import tornado.web
 
-from reader import Reader
+from parser import Parser
 
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
         self.repo = self.application.repo
         self.root_path = self.application.root_path
+        self.parser = Parser()
+
+    def get_error_html(self, code, **kwargs):
+        self.write(str(code))
+
+    def get_draft_content(self, path):
+        '''Get content from file in working tree'''
+        abs_path = os.path.join(self.root_path, path)
+        if not os.path.isfile(abs_path):
+            raise tornado.web.HTTPError(404)
+        try:
+            with open(abs_path) as f:
+                return f.read().decode('utf-8')
+        except:
+            raise tornado.web.HTTPError(500)
+
+    def get_formal_content(self, path):
+        '''Get content from blob'''
+        try:
+            blob = self.repo.head.commit.tree[path]
+        except:
+            raise tornado.web.HTTPError(404)
+        try:
+            return blob.data_stream.read()
+        except:
+            raise tornado.web.HTTPError(500) 
 
 class ViewHandler(BaseHandler):
     def get(self, path):
-       blob = self.repo.head.commit.tree[path]
-       content = blob.data_stream.read()
-       reader = Reader()
-       body,meta = reader.read(content)
-       self.write(body)
+        md = self.get_draft_content(path)
+        content, meta = self.parser.parse(md)
+        self.render('view.html', title=meta.get('title'), content=content)
 
 class RawHandler(BaseHandler):
     def get(self, path):
-        blob = self.repo.head.commit.tree[path]
-        content = blog.data_stream.read()
-        self.write(content)
-
-class EditHandler(BaseHandler):
-    def get(self, path):
-       abspath = os.path.join(self.root_path, path) 
-       reader = Reader()
-       body, meta = reader.read_from_file(abspath)
-       self.write(body)
+        md = self.get_formal_content(path)
+        self.write(md)
 

@@ -8,7 +8,7 @@ import tornado.web
 from tornado.options import define, options
 import git
 
-from handlers import ViewHandler
+from handlers import *
 
 define("port", default=8888, help="run on the given port", type=int)
 define("path", default='./', help="run on the given path", type=str)
@@ -20,6 +20,7 @@ class XdocApp(tornado.web.Application):
 
         handlers = [
             (r'/view/(.*)', ViewHandler),
+            (r'/raw/(.*)', RawHandler),
         ]
 
         settings = {
