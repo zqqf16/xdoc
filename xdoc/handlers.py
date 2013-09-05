@@ -15,7 +15,31 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_error_html(self, code, **kwargs):
         self.write(str(code))
 
-    def get_draft_content(self, path):
+class ViewHandler(BaseHandler):
+    def get(self, path):
+        md = self.get_content(path)
+        content, meta = self.parser.parse(md)
+        self.render('view.html', title=meta.get('title'), content=content)
+
+    def get_content(self, path):
+        '''Get content from blob'''
+        try:
+            blob = self.repo.head.commit.tree[path]
+        except:
+            raise tornado.web.HTTPError(404)
+        try:
+            return blob.data_stream.read().decode('utf-8')
+        except:
+            raise tornado.web.HTTPError(500) 
+
+class RawHandler(BaseHandler):
+    def get(self, path):
+        content = self.get_content(path)
+        title = os.path.basename(path)
+        #TODO
+        self.render('edit.html', title=title, content=content)
+
+    def get_content(self, path):
         '''Get content from file in working tree'''
         abs_path = os.path.join(self.root_path, path)
         if not os.path.isfile(abs_path):
@@ -26,25 +50,8 @@ class BaseHandler(tornado.web.RequestHandler):
         except:
             raise tornado.web.HTTPError(500)
 
-    def get_formal_content(self, path):
-        '''Get content from blob'''
-        try:
-            blob = self.repo.head.commit.tree[path]
-        except:
-            raise tornado.web.HTTPError(404)
-        try:
-            return blob.data_stream.read()
-        except:
-            raise tornado.web.HTTPError(500) 
-
-class ViewHandler(BaseHandler):
-    def get(self, path):
-        md = self.get_draft_content(path)
-        content, meta = self.parser.parse(md)
-        self.render('view.html', title=meta.get('title'), content=content)
-
-class RawHandler(BaseHandler):
-    def get(self, path):
-        md = self.get_formal_content(path)
-        self.write(md)
-
+class ListHandler(BaseHandler):
+    def get(self):
+        tree = self.repo.head.commit.tree
+        blobs = [item for item in tree.traverse() if item.type=='blob']
+        self.render('list.html', title="All", docs=blobs)

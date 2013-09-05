@@ -21,6 +21,7 @@ class XdocApp(tornado.web.Application):
         handlers = [
             (r'/view/(.*)', ViewHandler),
             (r'/raw/(.*)', RawHandler),
+            (r'[/]?', ListHandler),
         ]
 
         settings = {
@@ -33,5 +34,5 @@ class XdocApp(tornado.web.Application):
 
 if __name__ == '__main__':
     options.parse_command_line()
-    XdocApp('../').listen(options.port)
+    XdocApp(options.path).listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
