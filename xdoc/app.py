@@ -21,6 +21,7 @@ class XdocApp(tornado.web.Application):
         handlers = [
             (r'/view/(.*)', ViewHandler),
             (r'/raw/(.*)', RawHandler),
+            (r'/edit/(.*)', EditHandler),
             (r'[/]?', ListHandler),
         ]
 

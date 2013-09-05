@@ -36,8 +36,7 @@ class RawHandler(BaseHandler):
     def get(self, path):
         content = self.get_content(path)
         title = os.path.basename(path)
-        #TODO
-        self.render('edit.html', title=title, content=content)
+        self.write({'title': title, 'content': content})
 
     def get_content(self, path):
         '''Get content from file in working tree'''
@@ -49,6 +48,10 @@ class RawHandler(BaseHandler):
                 return f.read().decode('utf-8')
         except:
             raise tornado.web.HTTPError(500)
+
+class EditHandler(BaseHandler):
+    def get(self, path):
+        self.render('edit.html')
 
 class ListHandler(BaseHandler):
     def get(self):
