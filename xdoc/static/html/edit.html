@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app="xdoc.editor">
+<head>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+	<title>Edit</title>
+	<style>
+	   .ace_editor {height: 600px;}
+	   #previewer {height: 600px;
+    </style>
+	<script type="text/javascript" src="/static/js/lib/ace.js"></script>
+	<script type="text/javascript" src="/static/js/lib/angular.min.js"></script>
+	<script type="text/javascript" src="/static/js/lib/mode-markdown.js"></script>
+	<script type="text/javascript" src="/static/js/lib/theme-textmate.js"></script>
+	<script type="text/javascript" src="/static/js/lib/ui-ace.js"></script>
+	<script type="text/javascript" src="/static/js/lib/showdown.js"></script>
+	<script type="text/javascript" src="/static/js/edit.js"></script>
+</head>
+<body>
+	<div id="wrapper" class="row" ng-controller="AceCtrler">
+		<div class="col-md-12"><h1>{{ title }}</h1></div>
+		<div class="col-md-6" ui-ace="{useWrapMode: true, 
+			theme: 'textmate', 
+			mode: 'markdown', 
+			fontSize: 16}" ng-model="aceModel"></div>
+		<div class="col-md-6" id='previewer' ng-model="aceModel" markdown></div>
+	</div>
+</body>
+</html>
