@@ -1,0 +1,14 @@
+//document
+{
+	"title": "xxxxxxxxxxx",
+	"author": "xxxxxx",
+	"tags": ["tag1", "tag2"],
+	"content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+	"parent": "12321123",
+}
+
+//version
+{
+	"id": "1231231234",
+	"current": "231241341313",
+}
