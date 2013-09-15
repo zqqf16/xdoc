@@ -99,6 +99,8 @@ angular.module('ui.ace', [])
 
         // EVENTS
         session.on('change', onChange(opts.onChange));
+		$(elm).height(window.innerHeight-52);
+        acee.resize();
 
       }
     };

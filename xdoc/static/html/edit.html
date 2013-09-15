@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <html ng-app="xdoc.editor">
-<head>
-	<meta charset="utf-8" />
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-	<title>Edit</title>
-	<style>
-	   .ace_editor {height: 600px;}
-	   #previewer {height: 600px;
-    </style>
-	<script type="text/javascript" src="/static/js/lib/ace.js"></script>
-	<script type="text/javascript" src="/static/js/lib/angular.min.js"></script>
-	<script type="text/javascript" src="/static/js/lib/mode-markdown.js"></script>
-	<script type="text/javascript" src="/static/js/lib/theme-textmate.js"></script>
-	<script type="text/javascript" src="/static/js/lib/ui-ace.js"></script>
-	<script type="text/javascript" src="/static/js/lib/showdown.js"></script>
-	<script type="text/javascript" src="/static/js/edit.js"></script>
-</head>
-<body>
-	<div id="wrapper" class="row" ng-controller="AceCtrler">
-		<div class="col-md-12"><h1>{{ title }}</h1></div>
-		<div class="col-md-6" ui-ace="{useWrapMode: true, 
-			theme: 'textmate', 
-			mode: 'markdown', 
-			fontSize: 16}" ng-model="aceModel"></div>
-		<div class="col-md-6" id='previewer' ng-model="aceModel" markdown></div>
-	</div>
-</body>
+	<head>
+		<meta charset="utf-8" />
+		<title>Editor</title>
+		<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<style>
+			#previewer {overflow-y:auto;}
+			.row {margin-right: 0; margin-left:0;}
+			.title{width: 400px;}
+			.navbar{margin-bottom: 0;border-radius:0}
+		</style>
+		<script type="text/javascript" src="/static/js/lib/ace.js"></script>
+		<script type="text/javascript" src="/static/js/lib/angular.min.js"></script>
+		<script type="text/javascript" src="/static/js/lib/mode-markdown.js"></script>
+		<script type="text/javascript" src="/static/js/lib/theme-textmate.js"></script>
+		<script type="text/javascript" src="/static/js/lib/ui-ace.js"></script>
+		<script type="text/javascript" src="/static/js/lib/showdown.js"></script>
+		<script type="text/javascript" src="/static/js/lib/jquery.js"></script>
+		<script type="text/javascript" src="/static/js/edit.js"></script>
+	</head>
+	<body>
+		<header class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<a href="../" class="navbar-brand">Home</a>
+		</div>
+		<form class="navbar-form navbar-left">
+			<div class="form-group"ng-controller="AceCtrler">
+				<input type="text" class="form-control title" placeholder="Title" ng-model="title">
+			</div>
+		</form>
+		</header>
+		<div class="container-liquid" ng-controller="AceCtrler">
+			<div class="row">
+				<div class="col-lg-6" ng-style="editor_style" resize ui-ace="{useWrapMode: true, 
+					theme: 'textmate', 
+					mode: 'markdown', 
+					fontSize: 16}" ng-model="aceModel"></div>
+				<div class="col-lg-6" id='previewer' ng-model="aceModel" ng-style="editor_style" resize markdown></div>
+			</div>
+		</div>
+	</body>
 </html>
