@@ -52,10 +52,26 @@ class CategoryHandler(BaseHandler):
 
 class DraftHandler(BaseHandler):        
     def get(self):
+        path = self.get_argument('path', '')
+        if not path:
+            raise tornado.web.HTTPError(404)
+            
         content = self.get_content(path)
-        title = os.path.basename(path)
-        title = file2title(os.path.splitext(title)[0])
+        info = self.get_info(path)
+        title = info['title']
         self.write({'title': title, 'content': content})
+
+    def get_info(self, path):
+        '''Get the information of this doc'''
+        index = os.path.join(self.root_path, 'index.json')
+        with open(index, 'r') as f:
+            all_info = json.load(f)
+
+        for item in all_info:
+            if item['path'] == path:
+                return item
+
+        raise tornado.web.HTTPError(404)
 
     def get_content(self, path):
         '''Get content from file in working tree'''
@@ -72,3 +88,4 @@ class DraftHandler(BaseHandler):
         arguments = json.loads(self.request.body)
         title = arguments['title']
         content = arguments['content']
+        path = arugments['path']
