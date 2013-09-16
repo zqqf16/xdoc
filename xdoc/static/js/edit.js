@@ -30,10 +30,24 @@ editor.directive('markdown', function () {
 });
 
 editor.controller('AceCtrler', ['$scope', '$http', function($scope, $http) {
-	$http.get('/raw/example.md').success(function(data){
+	$http.get('/draft', {params: {path:'example.md'}}).success(function(data){
 		$scope.aceModel = data.content;
 		$scope.title = data.title;
 	});
+	$http.get('/category').success(function(data){
+		$scope.categories = data.categories;
+		$scope.category = $scope.categories[0];
+	});
 
+	$scope.save = function() {
+		$http.post("/draft", {
+			title: $scope.title,
+			content: $scope.aceModel,
+		}).success(function (data) {
+			alert('success');
+		}).error(function (data) {
+			alert('error');
+		});
+	};
 }]);
 

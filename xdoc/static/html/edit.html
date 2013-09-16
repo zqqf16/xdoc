@@ -20,18 +20,35 @@
 		<script type="text/javascript" src="/static/js/lib/jquery.js"></script>
 		<script type="text/javascript" src="/static/js/edit.js"></script>
 	</head>
-	<body>
+	<body ng-controller="AceCtrler">
 		<header class="navbar navbar-inverse">
 		<div class="navbar-header">
 			<a href="../" class="navbar-brand">Home</a>
 		</div>
-		<form class="navbar-form navbar-left">
-			<div class="form-group"ng-controller="AceCtrler">
+		<form class="navbar-form navbar-left form-inline">
+			<div class="form-group">
 				<input type="text" class="form-control title" placeholder="Title" ng-model="title">
 			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="category">
+					<option ng-repeat="category in categories">{{category}}</option>
+				</select>
+			</div>
+
 		</form>
+		<div class="btn-toolbar navbar-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-danger navbar-btn">Discard</button>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-success navbar-btn">Publish</button>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-primary navbar-btn" ng-click="save()">Save</button>
+			</div>
+		</div>
 		</header>
-		<div class="container-liquid" ng-controller="AceCtrler">
+		<div class="container-liquid">
 			<div class="row">
 				<div class="col-lg-6" ng-style="editor_style" resize ui-ace="{useWrapMode: true, 
 					theme: 'textmate', 

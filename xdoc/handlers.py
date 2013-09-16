@@ -2,9 +2,11 @@
 #-*- coding: utf-8 -*-
 
 import os
+import json
 import tornado.web
 
 from parser import Parser
+from utils import *
 
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
@@ -32,10 +34,27 @@ class ViewHandler(BaseHandler):
         except:
             raise tornado.web.HTTPError(500) 
 
-class RawHandler(BaseHandler):
+class EditHandler(BaseHandler):
     def get(self, path):
+        self.render('edit.html')
+
+class ListHandler(BaseHandler):
+    def get(self):
+        tree = self.repo.head.commit.tree
+        blobs = [item for item in tree.traverse() if item.type=='blob']
+        self.render('list.html', title="All", docs=blobs)
+
+#REST
+class CategoryHandler(BaseHandler):
+    def get(self):
+        trees = [t.path for t in self.repo.head.commit.tree.trees]
+        self.write({"categories": trees})
+
+class DraftHandler(BaseHandler):        
+    def get(self):
         content = self.get_content(path)
         title = os.path.basename(path)
+        title = file2title(os.path.splitext(title)[0])
         self.write({'title': title, 'content': content})
 
     def get_content(self, path):
@@ -49,12 +68,7 @@ class RawHandler(BaseHandler):
         except:
             raise tornado.web.HTTPError(500)
 
-class EditHandler(BaseHandler):
-    def get(self, path):
-        self.render('edit.html')
-
-class ListHandler(BaseHandler):
-    def get(self):
-        tree = self.repo.head.commit.tree
-        blobs = [item for item in tree.traverse() if item.type=='blob']
-        self.render('list.html', title="All", docs=blobs)
+    def post(self):
+        arguments = json.loads(self.request.body)
+        title = arguments['title']
+        content = arguments['content']

@@ -20,9 +20,10 @@ class XdocApp(tornado.web.Application):
 
         handlers = [
             (r'/view/(.*)', ViewHandler),
-            (r'/raw/(.*)', RawHandler),
             (r'/edit/(.*)', EditHandler),
             (r'[/]?', ListHandler),
+            (r'/category', CategoryHandler),
+            (r'/draft', DraftHandler),
         ]
 
         settings = {
