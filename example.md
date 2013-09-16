@@ -49,4 +49,3 @@ This is a link to [Google](http://google.com).
 Create fake iPhone text conversations. Enter a conversation: Example: Dad: Your mom and I are going to divorce next month. Son: Why ? Call me please. 
 
 Create fake iPhone text conversations. Enter a conversation: Example: Dad: Your mom and I are going to divorce next month. Son: Why ? Call me please. 
-

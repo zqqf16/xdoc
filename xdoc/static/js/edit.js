@@ -33,6 +33,7 @@ editor.controller('AceCtrler', ['$scope', '$http', function($scope, $http) {
 	$http.get('/draft', {params: {path:'example.md'}}).success(function(data){
 		$scope.aceModel = data.content;
 		$scope.title = data.title;
+		$scope.path = data.path;
 	});
 	$http.get('/category').success(function(data){
 		$scope.categories = data.categories;
@@ -43,6 +44,7 @@ editor.controller('AceCtrler', ['$scope', '$http', function($scope, $http) {
 		$http.post("/draft", {
 			title: $scope.title,
 			content: $scope.aceModel,
+			path: $scope.path,
 		}).success(function (data) {
 			alert('success');
 		}).error(function (data) {

@@ -1,7 +1,1 @@
-[
-	{
-		"title": "Example",
-		"path": "example.md",
-		"category": "test"
-	}
-]	
+{"example.md": {"title": "Markdown Example"}}
