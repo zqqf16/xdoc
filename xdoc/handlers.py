@@ -7,14 +7,14 @@ import tornado.web
 
 from parser import Parser
 from utils import *
-from fmanager import Fmanager
+from manager import FileManager
 
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
         self.repo = self.application.repo
         self.root_path = self.application.root_path
         self.parser = Parser()
-        self.f = Fmanager(self.root_path)
+        self.f = FileManager(self.root_path)
 
     def get_error_html(self, code, **kwargs):
         self.write(str(code))

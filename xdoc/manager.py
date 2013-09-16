@@ -2,40 +2,54 @@
 # -*- coding: utf-8 -*-
 
 import os
+import git
 import json
 
-class Fmanager(object):
+class BaseManager(object):
+    INDEX_FILE = 'index.json'
+
+    def __init__(self, root_path):
+        self.root_path = root_path
+
+    def get_all_info(self):
+        index = self.get_content(self.INDEX_FILE)
+        return json.loads(index)
+
+    def get_info(self, path):
+        all_info = self.get_all_info()
+        if all_info.has_key(path):
+            return all_info[path]
+        else:
+            return {}
+
+    def get_content(self, path):
+        pass
+
+class GitManager(BaseManager):
+    '''Git Manager'''
+    def __init__(self, root_path):
+        super(GitManager, self).__init__(root_path)
+        self.repo = git.Repo(self.root_path)
+
+    def get_content(self, path):
+        blob = self.repo.head.commit.tree[path]
+        return blob.data_stream.read().decode('utf-8')
+
+class FileManager(BaseManager):
     '''File Manager'''
 
     INDEX_FILE = 'index.json'
 
     def __init__(self, root_path):
-        self.root_path = root_path
-        self.index = os.path.join(self.root_path, self.INDEX_FILE)
+        super(FileManager, self).__init__(root_path)
 
+        self.index = os.path.join(self.root_path, self.INDEX_FILE)
         if not os.path.isfile(self.index):
             self.__init_index()
 
     def __init_index(self):
         with open(self.index, 'w') as f:
             json.dump({}, f)
-
-    def get_all_info(self):
-        '''Get all informations from index'''
-
-        with open(self.index, 'r') as f:
-            all_info = json.load(f)
-
-        return all_info
-
-    def get_info(self, path):
-        '''Get the information of given file'''
-
-        all_info = self.get_all_info()
-        if all_info.has_key(path):
-            return all_info[path]
-        else:
-            return {}
 
     def update_info(self, path, title, **kwargs):
         '''Update the information'''
