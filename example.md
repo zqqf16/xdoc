@@ -1,11 +1,3 @@
-Title: Example Document  
-Auther: zqqf16  
-Created: 2013-8-28  
-Modified: 2013-8-28  
-Tag: test  
-Tag: example  
-
-
 ## This is an H2
 ### This is an H3
 #### This is an H4
