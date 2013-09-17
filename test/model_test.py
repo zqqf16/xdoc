@@ -5,6 +5,8 @@ import sys
 import unittest
 from os.path import join, dirname, abspath
 from bson.objectid import ObjectId
+import uuid
+from datetime import datetime
 
 sys.path.insert(0, join(dirname(dirname(abspath(__file__)))))
 from xdoc.model import *
@@ -12,16 +14,17 @@ from xdoc.model import *
 class TestModels(unittest.TestCase):
     
     def setUp(self):
-        init('test')
+        db_init('xdoc')
 
-    def test_content(self):
-        content = Content(title='content test', body='unit test')
-        content.save()
-        self.assertIsInstance(content.id, ObjectId)
-        nc = Content.objects(id=content.id).first()
-        self.assertEqual(nc.title, content.title)
-        self.assertEqual(nc.body, content.body)
+    def test_Doc(self):
+        with open('../example.md', 'r') as f:
+            content = f.read().decode('utf-8')
 
+        d = Doc(uuid=str(uuid.uuid4()),
+                title='Example',
+                content=content);
+        d.save()
+        print d.id
 
 if __name__ == '__main__':
     unittest.main()

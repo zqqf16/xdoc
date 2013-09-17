@@ -10,20 +10,16 @@ import git
 
 from handlers import *
 
-define("port", default=8888, help="run on the given port", type=int)
-define("path", default='./', help="run on the given path", type=str)
+define("port", default=8000, help="run on the given port", type=int)
+define("db", default='xdoc', help="database name", type=str)
 
 class XdocApp(tornado.web.Application):
-    def __init__(self, root_path):
-        self.repo = git.Repo(root_path)
-        self.root_path = root_path
+    def __init__(self, db_name):
+        self.db_name = db_name
 
         handlers = [
-            (r'/view/(.*)', ViewHandler),
-            (r'/edit/(.*)', EditHandler),
-            (r'[/]?', ListHandler),
-            (r'/category', CategoryHandler),
-            (r'/draft', DraftHandler),
+            (r'/drafts/(.*)', DraftHandler),
+            (r'/drafts', DraftHandler),
         ]
 
         settings = {
@@ -36,5 +32,5 @@ class XdocApp(tornado.web.Application):
 
 if __name__ == '__main__':
     options.parse_command_line()
-    XdocApp(options.path).listen(options.port)
+    XdocApp(options.db).listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
