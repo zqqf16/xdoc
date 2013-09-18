@@ -17,6 +17,15 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_error_html(self, code, **kwargs):
         self.write(str(code))
 
+#static file handler
+class StaticHandler(tornado.web.StaticFileHandler):
+    def initialize(self, path, filename):
+        super(StaticHandler, self).initialize(path)
+        self.filename = filename
+
+    def get(self):
+        super(StaticHandler, self).get(self.filename)
+
 #REST
 class DraftHandler(BaseHandler):
     def get(self, obj_id=None):

@@ -10,23 +10,25 @@ import git
 
 from handlers import *
 
-define("port", default=8000, help="run on the given port", type=int)
-define("db", default='xdoc', help="database name", type=str)
+define('port', default=8000, help='run on the given port', type=int)
+define('db', default='xdoc', help='database name', type=str)
 
 class XdocApp(tornado.web.Application):
     def __init__(self, db_name):
         self.db_name = db_name
 
+        settings = {
+            'template_path': os.path.join(os.path.dirname(__file__), 'templates'),
+            'static_path': os.path.join(os.path.dirname(__file__), 'static'),
+            'login_url': '/login',
+        }
+
+        html_path = os.path.join(settings['static_path'], 'html')
         handlers = [
             (r'/draft/(.*)', DraftHandler),
             (r'/draft', DraftHandler),
+            (r'/editor', StaticHandler, {'path': html_path, 'filename': 'edit.html'}),
         ]
-
-        settings = {
-            "template_path": os.path.join(os.path.dirname(__file__), "templates"),
-            "static_path": os.path.join(os.path.dirname(__file__), "static"),
-            "login_url": "/login",
-        }
 
         super(XdocApp,self).__init__(handlers, **settings)
 
