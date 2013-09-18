@@ -12,7 +12,6 @@ from bson.objectid import ObjectId
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
         self.parser = Parser()
-        print 'ahah'
         db_init()
 
     def get_error_html(self, code, **kwargs):
@@ -20,24 +19,24 @@ class BaseHandler(tornado.web.RequestHandler):
 
 #REST
 class DraftHandler(BaseHandler):
-    def get(self, obj_id = None):
+    def get(self, obj_id=None):
         try:
-            if not object_id:
-                draft = [d.json for d in Doc.objects]
+            if not obj_id:
+                result = list(Doc.objects)
             else:
-                draft = Doc.objects.get(id=ObjectId(obj_id))
+                result = Doc.objects.get(id=ObjectId(obj_id))
         except:
             raise tornado.web.HTTPError(404)
 
-        if not draft:
+        if not result:
             raise tornado.web.HTTPError(404)
 
-        self.write(draft.json())
+        self.write(json.dumps(result, cls=DocJSONEncoder))
 
-    def put(self):
+    def put(self, obj_id=None):
         pass
 
-    def post(self):
+    def post(self, obj_id=None):
         arguments = json.loads(self.request.body)
         path = arguments['path']
 

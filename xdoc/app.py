@@ -18,8 +18,8 @@ class XdocApp(tornado.web.Application):
         self.db_name = db_name
 
         handlers = [
-            (r'/drafts/(.*)', DraftHandler),
-            (r'/drafts', DraftHandler),
+            (r'/draft/(.*)', DraftHandler),
+            (r'/draft', DraftHandler),
         ]
 
         settings = {

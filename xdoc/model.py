@@ -28,21 +28,26 @@ class Doc(Document):
     content = StringField()
 
     def fork(self):
-        return Doc(uuid=self.uuid, title=self.title, tags=self.tags,
-                   category=self.category, created=self.created,
-                   view_count=self.view_count, content=self.content)
+        '''
+        Fork a new doc with the same uuid, title, tags, category,
+        created time, view count and content.
+        '''
+        return Doc(uuid=self.uuid, 
+                   title=self.title, 
+                   tags=self.tags,
+                   category=self.category, 
+                   created=self.created,
+                   view_count=self.view_count, 
+                   content=self.content)
 
-    def json(self):
-        fields = {
-            'uuid': self.uuid,
-            'status': self.status,
-            'title': self.title,
-            'tags': self.tags,
-            'category': self.category,
-            'created': self.created.strftime('%Y-%m-%d'),
-            'modified': self.modified.strftime('%Y-%m-%d'),
-            'view_count': self.view_count,
-            'content': self.content,
-        }
+class DocJSONEncoder(json.JSONEncoder):
+    '''json encoder'''
+    def default(self, obj):
+        if isinstance(obj, Doc):
+            return obj._data 
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d')
+        if isinstance(obj, ObjectId):
+            return str(obj)
 
-        return json.dumps(fields)
+        return super(DocJSONEncoder, self).default(obj)

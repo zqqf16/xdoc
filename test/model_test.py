@@ -7,6 +7,7 @@ from os.path import join, dirname, abspath
 from bson.objectid import ObjectId
 import uuid
 from datetime import datetime
+import json
 
 sys.path.insert(0, join(dirname(dirname(abspath(__file__)))))
 from xdoc.model import *
@@ -20,11 +21,14 @@ class TestModels(unittest.TestCase):
         with open('../example.md', 'r') as f:
             content = f.read().decode('utf-8')
 
+        '''
         d = Doc(uuid=str(uuid.uuid4()),
                 title='Example',
                 content=content);
         d.save()
-        print d.id
+        '''
+        d = Doc.objects
+        print json.dumps(d, cls=DocJSONEncoder)
 
 if __name__ == '__main__':
     unittest.main()

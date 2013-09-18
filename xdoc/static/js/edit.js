@@ -1,4 +1,4 @@
-var editor = angular.module('xdoc.editor', ['ui.ace']);
+var editor = angular.module('xdoc.editor', ['ui.ace', 'ngResource']);
 
 editor.directive('resize', function ($window) {
     return function (scope) {
@@ -29,27 +29,11 @@ editor.directive('markdown', function () {
 	};
 });
 
-editor.controller('AceCtrler', ['$scope', '$http', function($scope, $http) {
-	$http.get('/draft', {params: {path:'example.md'}}).success(function(data){
-		$scope.aceModel = data.content;
-		$scope.title = data.title;
-		$scope.path = data.path;
-	});
-	$http.get('/category').success(function(data){
-		$scope.categories = data.categories;
-		$scope.category = $scope.categories[0];
-	});
+editor.controller('AceCtrler', ['$scope', '$resource', function($scope, $resource) {
+	var Draft = $resource('/draft/:draft_id', {draft_id:'@id'});
+	$scope.draft = Draft.get({draft_id:"523942171d41c8aac0e3e1ce"});
 
 	$scope.save = function() {
-		$http.post("/draft", {
-			title: $scope.title,
-			content: $scope.aceModel,
-			path: $scope.path,
-		}).success(function (data) {
-			alert('success');
-		}).error(function (data) {
-			alert('error');
-		});
 	};
 }]);
 
